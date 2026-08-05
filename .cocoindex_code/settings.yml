@@ -1,0 +1,10 @@
+exclude_patterns:
+- '**/.*'
+- '**/build'
+- '**/.cocoindex_code'
+include_patterns:
+- '**/*.dart'
+- '**/*.md'
+- '**/*.yaml'
+- '**/*.yml'
+- '**/*.json'
