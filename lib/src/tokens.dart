@@ -30,6 +30,10 @@ abstract final class AppTokens {
   static const double dotRadiusMiddle = 12;
   static const double dotRadiusLarge = 14;
 
+  /// Gap between [CatSegmented] buttons: enough to read as separate controls,
+  /// not enough to lose them as one group.
+  static const double segmentGap = 4;
+
   /// Single-column forms stay readable rather than stretching to the window.
   static const double formMaxWidth = 560;
 

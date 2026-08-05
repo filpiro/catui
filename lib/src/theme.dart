@@ -65,5 +65,7 @@ ThemeData catTheme(
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: SegmentedButton.styleFrom(shape: shape),
     ),
+    // Same corner as the buttons it contains, so a dialog reads as one surface.
+    dialogTheme: const DialogThemeData(shape: shape),
   );
 }

@@ -51,34 +51,33 @@ class _Gallery extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: SegmentedButton<String>(
-              segments: [
-                for (final name in _flavors.keys)
-                  ButtonSegment(value: name, label: Text(name)),
-              ],
-              selected: {flavor},
-              onSelectionChanged: (s) => onFlavor(s.first),
-              showSelectedIcon: false,
+            child: CatSegmented<String>(
+              segments: {for (final name in _flavors.keys) name: name},
+              selected: flavor,
+              onChanged: onFlavor,
             ),
           ),
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [
-          const _Section('Actions (disabled state)'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          const _Section('Actions (enabled, then disabled)'),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
             children: [
+              EditIconButton(onPressed: () {}),
+              DeleteIconButton(onPressed: () {}),
+              DangerButton(onPressed: () {}, child: const Text('Elimina')),
+              const SizedBox(width: 24),
               const EditIconButton(),
               const DeleteIconButton(),
-              const SizedBox(width: 16),
-              DangerButton(onPressed: () {}, child: const Text('Elimina')),
+              const DangerButton(child: Text('Elimina')),
             ],
           ),
           const _Section('Buttons (AppTokens.radius)'),
           Wrap(
-            alignment: WrapAlignment.center,
             spacing: 12,
             children: [
               FilledButton(onPressed: () {}, child: const Text('Filled')),
@@ -87,8 +86,58 @@ class _Gallery extends StatelessWidget {
               TextButton(onPressed: () {}, child: const Text('Text')),
             ],
           ),
+          const _Section('Select'),
+          const Align(alignment: Alignment.centerLeft, child: _SelectDemo()),
+          const _Section('Dialog (AppTokens.radius)'),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FilledButton(
+              onPressed: () => showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Elimina elemento'),
+                  content: const Text('L\'operazione non è reversibile.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Annulla'),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Conferma'),
+                    ),
+                  ],
+                ),
+              ),
+              child: const Text('Apri dialog'),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _SelectDemo extends StatefulWidget {
+  const _SelectDemo();
+
+  @override
+  State<_SelectDemo> createState() => _SelectDemoState();
+}
+
+class _SelectDemoState extends State<_SelectDemo> {
+  String _value = 'mocha';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownMenu<String>(
+      initialSelection: _value,
+      label: const Text('Flavor'),
+      onSelected: (v) => setState(() => _value = v!),
+      dropdownMenuEntries: [
+        for (final name in _flavors.keys)
+          DropdownMenuEntry(value: name, label: name),
+      ],
     );
   }
 }
@@ -100,7 +149,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      padding: const EdgeInsets.only(top: 24, bottom: 8),
       child: Text(
         title,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(

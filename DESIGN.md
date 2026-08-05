@@ -28,6 +28,7 @@ colors:
   onSurface: "{catppuccin.text}"
   onSurfaceVariant: "{catppuccin.subtext0}"
   secondaryContainer: "{catppuccin.surface1}"
+  surfaceContainerHigh: "{catppuccin.surface1}"
   surfaceContainerHighest: "{catppuccin.surface2}"
   error: "{catppuccin.red}"
   onError: "{catppuccin.base}"
@@ -41,11 +42,8 @@ rounded:
 spacing:
   formMaxWidth: 560px
   pillMinHeight: 48px
+  segmentGap: 4px
 components:
-  hoverTile:
-    backgroundColor: transparent
-  hoverTile-hover:
-    backgroundColor: "{colors.surfaceContainerHighest}"
   editIconButton:
     textColor: "{colors.onSurfaceVariant}"
     size: 18px
@@ -60,6 +58,18 @@ components:
     backgroundColor: "{colors.error}"
     textColor: "{colors.onError}"
     rounded: "{rounded.md}"
+  catSegmented-selected:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.onPrimary}"
+    rounded: "{rounded.md}"
+  catSegmented:
+    backgroundColor: transparent
+    textColor: "{colors.primary}"
+    borderColor: "{colors.outline}"
+    rounded: "{rounded.md}"
+  dialog:
+    backgroundColor: "{colors.surfaceContainerHigh}"
+    rounded: "{rounded.md}"
 ---
 
 ## Overview
@@ -69,9 +79,9 @@ are wide, and rows are dense enough that a list is scannable without scrolling.
 
 Two things carry the identity. The **catppuccin palette**, which supplies every
 colour through a `Flavor` rather than a fixed hex, so light and dark are the
-same design resolved twice. And **hover as the disclosure mechanism** — rows
-reveal their actions on hover instead of showing them always or hiding them
-behind a menu. Neither survives a phone; this style is not for one.
+same design resolved twice. And **hover as the intent signal** — a row action
+sits muted until the pointer reaches it, then takes the colour of what it will
+do. Neither survives a phone; this style is not for one.
 
 Everything else is stock Material 3, deliberately. The style is defined by the
 handful of places it departs, not by a wholesale reskin.
@@ -143,6 +153,9 @@ Center(child: ConstrainedBox(
 ))
 ```
 
+`spacing.segmentGap` (4) is the gap between `CatSegmented` buttons: enough that
+they read as separate controls, little enough that they still read as one group.
+
 `spacing.pillMinHeight` (48) is for a pill button sitting next to an icon
 button. Material's default pill is 40 tall, the same as an `IconButton`'s hover
 disc, but the pill's visual weight reads smaller beside it. Forcing 48 fills the
@@ -154,10 +167,11 @@ depends on a gap being a particular number, so nothing is tokenised.
 ## Shapes
 
 `rounded.md` (10) replaces Material 3's stadium pills on every button —
-`Filled`, `Elevated`, `Outlined`, `Text` and `Segmented`. Not 16, which is the
-FAB's radius: buttons are ~40 tall against the FAB's 56, so 10 preserves the
-FAB's corner-to-height proportion. At 16 a 40px button is still a pill. The FAB
-and chips keep their defaults.
+`Filled`, `Elevated`, `Outlined`, `Text` and `Segmented` — and is also the
+dialog's corner, so a dialog and the buttons inside it read as one surface. Not
+16, which is the FAB's radius: buttons are ~40 tall against the FAB's 56, so 10
+preserves the FAB's corner-to-height proportion. At 16 a 40px button is still a
+pill. The FAB and chips keep their defaults.
 
 The **dot scale** is the other shape decision. A filled `CircleAvatar` in an
 identity colour is the main visual anchor of a list, and its radius carries
@@ -176,34 +190,13 @@ decoration. Pick from the scale — a fifth size is a decision, not a tweak.
 ## Components
 
 Behaviour is the reason these exist. The tokens above describe their skin; what
-follows is what a token cannot say.
+follows is what a token cannot say. `example/` is a gallery app that renders all
+of them in every flavor, enabled and disabled.
 
-### `HoverTile`
-
-Any list row. It is a `ListTile` whose highlight is driven from a `MouseRegion`
-rather than from `ListTile.hoverColor`, because `InkResponse` ignores hover when
-every callback is null — a non-tappable row would otherwise stay flat while its
-neighbours light up. Stock `hoverColor` is forced transparent so the ink overlay
-does not stack on the colour being animated.
-
-The fade is 200ms, matching Material's own `InkHighlight`, so a `HoverTile` and
-a stock inkwell row look identical in motion. (The spec has no motion token
-type; the value lives in `AppTokens.hoverFade`.)
-
-`actions` are revealed on hover via opacity plus `IgnorePointer`, never by
-inserting widgets — the space is always reserved, so rows do not reflow under
-the cursor.
-
-```dart
-HoverTile(
-  key: ValueKey(item.id),   // keyed: hover must not survive a reorder
-  leading: CircleAvatar(radius: AppTokens.dotRadius, backgroundColor: c),
-  title: Text(item.name),
-  subtitle: Text(item.detail),
-  onTap: () => open(item),
-  actions: [DeleteIconButton(onPressed: () => remove(item))],
-)
-```
+No component ships a hover *animation*: `AppTokens.hoverFade` (200ms, Material's
+own `InkHighlight` duration) is there so an app driving its own highlight — a
+list row lighting up under the cursor, say — matches the stock ink overlay
+instead of picking a duration.
 
 ### `intentHoverStyle({idle, accent})`
 
@@ -233,11 +226,30 @@ hover-tinted. By the time a confirmation dialog is open the user is committing,
 not browsing, so the button should look like what it does before the pointer
 arrives. Pair it with a plain `TextButton` cancel.
 
-### `EmptyState`
+### `CatSegmented<T>`
 
-A dimmed illustration above a message, for any list that can legitimately be
-empty. The asset ships inside the package. Keep the message a plain statement of
-what is absent — it is not a place for instructions.
+A single-choice group drawn as separate buttons: selected reads as
+`FilledButton`, the rest as `OutlinedButton`, `spacing.segmentGap` between them.
+
+It exists because Material's `SegmentedButton` cannot be made to do this from a
+theme. Its render box lays segments out edge to edge and paints one outer border
+with dividers between them; neither is reachable from `ButtonStyle`, so the gap
+has to come from not using the widget. Building on the two stock buttons means
+it inherits `rounded.md` and the accent for free.
+
+```dart
+CatSegmented<String>(
+  segments: {for (final name in flavors.keys) name: name},
+  selected: flavor,
+  onChanged: onFlavor,
+)
+```
+
+Single selection only, labels only. Multi-select, icons and a per-instance gap
+are absent because nothing has needed them; add them when something does.
+
+Stock `SegmentedButton` still gets `rounded.md` from the theme — use it when the
+joined bar is what you want.
 
 ## Do's and Don'ts
 
@@ -246,7 +258,6 @@ what is absent — it is not a place for instructions.
 - State the accent once, in the app, taken from the flavor.
 - Reach for `AppTokens` before typing a number. If the number you want is not
   there, decide whether it should be — a one-off is fine, a second copy is not.
-- Use `HoverTile` for every list row, including rows with no tap action.
 - Let widgets read `Theme.of(context).colorScheme`; the theme is the only
   colour source.
 - Override a tooltip when a disabled control has a reason.
