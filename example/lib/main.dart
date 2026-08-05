@@ -5,7 +5,7 @@ void main() => runApp(const GalleryApp());
 
 /// Every flavor paired with the brightness it was drawn for: latte is the only
 /// light one, so the switcher can't produce a washed-out theme by accident.
-const _flavors = <String, (Flavor, Brightness)>{
+final _flavors = <String, (Flavor, Brightness)>{
   'latte': (catppuccin.latte, Brightness.light),
   'frappe': (catppuccin.frappe, Brightness.dark),
   'macchiato': (catppuccin.macchiato, Brightness.dark),
@@ -66,21 +66,6 @@ class _Gallery extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         children: [
-          const _Section('HoverTile'),
-          for (var i = 1; i <= 3; i++)
-            HoverTile(
-              leading: CircleAvatar(
-                radius: AppTokens.dotRadius,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              title: Text('Row $i'),
-              subtitle: const Text('hover to reveal the actions'),
-              onTap: () {},
-              actions: [
-                EditIconButton(onPressed: () {}),
-                DeleteIconButton(onPressed: () {}),
-              ],
-            ),
           const _Section('Actions (disabled state)'),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,8 +87,6 @@ class _Gallery extends StatelessWidget {
               TextButton(onPressed: () {}, child: const Text('Text')),
             ],
           ),
-          const _Section('EmptyState'),
-          const SizedBox(height: 160, child: EmptyState('Nessun dato')),
         ],
       ),
     );
