@@ -17,6 +17,7 @@ ThemeData catTheme(
   Brightness brightness, {
   Color? primary,
   Color? secondary,
+  bool? roundedPill,
 }) {
   final scheme = ColorScheme(
     brightness: brightness,
@@ -41,9 +42,11 @@ ThemeData catTheme(
     outlineVariant: flavor.surface1,
   );
 
-  const shape = RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(AppTokens.radius)),
-  );
+  const globalShape = RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(AppTokens.radius)),
+        );
+
+  final buttonShape = roundedPill == true ? const StadiumBorder() : globalShape;
 
   return ThemeData(
     colorScheme: scheme,
@@ -51,21 +54,21 @@ ThemeData catTheme(
       style: IconButton.styleFrom(iconSize: AppTokens.iconSize),
     ),
     filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(shape: shape),
+      style: FilledButton.styleFrom(shape: buttonShape),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(shape: shape),
+      style: ElevatedButton.styleFrom(shape: buttonShape),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(shape: shape),
+      style: OutlinedButton.styleFrom(shape: buttonShape),
     ),
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(shape: shape),
+      style: TextButton.styleFrom(shape: buttonShape),
     ),
     segmentedButtonTheme: SegmentedButtonThemeData(
-      style: SegmentedButton.styleFrom(shape: shape),
+      style: SegmentedButton.styleFrom(shape: buttonShape),
     ),
     // Same corner as the buttons it contains, so a dialog reads as one surface.
-    dialogTheme: const DialogThemeData(shape: shape),
+    dialogTheme: const DialogThemeData(shape: globalShape),
   );
 }
