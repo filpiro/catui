@@ -86,6 +86,18 @@ class _Gallery extends StatelessWidget {
               TextButton(onPressed: () {}, child: const Text('Text')),
             ],
           ),
+          const _Section('Section header (leading + trailing)'),
+          CatSectionHeader(
+            leading: CircleAvatar(
+              radius: AppTokens.dotRadiusSmall,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+            title: 'Acme S.p.A.',
+            trailing: Text(
+              '4h 15m',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
           const _Section('Select'),
           const Align(alignment: Alignment.centerLeft, child: _SelectDemo()),
           const _Section('Dialog (AppTokens.radius)'),
@@ -147,15 +159,6 @@ class _Section extends StatelessWidget {
   const _Section(this.title);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24, bottom: 8),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      CatSectionHeader.inline(title: title);
 }
