@@ -37,6 +37,11 @@ abstract final class AppTokens {
   /// Single-column forms stay readable rather than stretching to the window.
   static const double formMaxWidth = 560;
 
+  /// Bottom padding a scrollable needs under a FloatingActionButton: the FAB's
+  /// 56 plus its 16 margin, plus a row's worth of air so the last row and its
+  /// hover actions stay clickable.
+  static const double fabClearance = 88;
+
   /// Pills sitting next to a 40px icon-button hover disc are forced up to 48 so
   /// they fill the tap box they already occupy instead of reading smaller.
   static const double pillMinHeight = 48;

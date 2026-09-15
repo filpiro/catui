@@ -21,4 +21,24 @@ void main() {
     expect(branded.onPrimary, catppuccin.mocha.base);
     expect(branded.onSecondary, catppuccin.mocha.base);
   });
+
+  testWidgets('a bare TextField is outlined with the house radius', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: catTheme(catppuccin.latte, Brightness.light),
+        home: const Scaffold(body: TextField()),
+      ),
+    );
+    final border = tester
+        .widget<InputDecorator>(find.byType(InputDecorator))
+        .decoration
+        .border;
+    expect(border, isA<OutlineInputBorder>());
+    expect(
+      (border as OutlineInputBorder).borderRadius,
+      BorderRadius.circular(AppTokens.radius),
+    );
+  });
 }

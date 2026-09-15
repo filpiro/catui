@@ -8,7 +8,10 @@ library;
 export 'package:catppuccin_flutter/catppuccin_flutter.dart';
 export 'package:lucide_icons_flutter/lucide_icons.dart';
 
+export 'src/dialogs.dart';
 export 'src/row_actions.dart';
+export 'src/section_header.dart';
 export 'src/segmented.dart';
+export 'src/tag.dart';
 export 'src/theme.dart';
 export 'src/tokens.dart';

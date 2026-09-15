@@ -70,5 +70,12 @@ ThemeData catTheme(
     ),
     // Same corner as the buttons it contains, so a dialog reads as one surface.
     dialogTheme: const DialogThemeData(shape: globalShape),
+    // Outlined everywhere, set once: a field in a dialog and a field on a page
+    // are the same control, so no screen states its own border.
+    inputDecorationTheme: const InputDecorationThemeData(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(AppTokens.radius)),
+      ),
+    ),
   );
 }
