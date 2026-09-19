@@ -15,11 +15,16 @@ class CatSegmented<T> extends StatelessWidget {
   final T selected;
   final ValueChanged<T> onChanged;
 
+  /// Optional icon per value. A segment with an icon shows only the icon and
+  /// uses its label as tooltip and semantic label.
+  final Map<T, IconData> icons;
+
   const CatSegmented({
     super.key,
     required this.segments,
     required this.selected,
     required this.onChanged,
+    this.icons = const {},
   });
 
   @override
@@ -29,16 +34,20 @@ class CatSegmented<T> extends StatelessWidget {
       runSpacing: AppTokens.segmentGap,
       children: [
         for (final MapEntry(key: value, value: label) in segments.entries)
-          value == selected
-              ? FilledButton(
-                  onPressed: () => onChanged(value),
-                  child: Text(label),
-                )
-              : OutlinedButton(
-                  onPressed: () => onChanged(value),
-                  child: Text(label),
-                ),
+          _segment(value, label),
       ],
     );
+  }
+
+  Widget _segment(T value, String label) {
+    final icon = icons[value];
+    final child = icon == null
+        ? Text(label)
+        : Icon(icon, size: 18, semanticLabel: label);
+    void onPressed() => onChanged(value);
+    final button = value == selected
+        ? FilledButton(onPressed: onPressed, child: child)
+        : OutlinedButton(onPressed: onPressed, child: child);
+    return icon == null ? button : Tooltip(message: label, child: button);
   }
 }
