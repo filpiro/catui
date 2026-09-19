@@ -55,6 +55,14 @@ abstract final class AppTokens {
   /// Inset around a page that is a form or a document rather than a list.
   static const double pagePadding = 24;
 
+  /// Horizontal inset of a list row's hover fill, so the highlight reads as a
+  /// tile rather than a full-bleed wash. A row's text therefore starts at
+  /// [tileMargin] + [gutter], and a section header matches it.
+  static const double tileMargin = 8;
+
+  /// Corner of that fill. 8, not [radius]: a 56px row at 10 reads as a pill.
+  static const double tileRadius = 8;
+
   /// Toolbar strip above a list: the gutter sideways, a little less above and
   /// below.
   static const EdgeInsets toolbarPadding = EdgeInsets.symmetric(

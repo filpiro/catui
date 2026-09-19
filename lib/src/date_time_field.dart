@@ -48,7 +48,9 @@ class CatDateTimeField extends StatelessWidget {
       initialTime: TimeOfDay.fromDateTime(initial),
     );
     if (time == null) return;
-    onChanged(DateTime(date.year, date.month, date.day, time.hour, time.minute));
+    onChanged(
+      DateTime(date.year, date.month, date.day, time.hour, time.minute),
+    );
   }
 
   @override

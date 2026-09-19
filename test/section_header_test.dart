@@ -34,7 +34,10 @@ void main() {
     expect(tester.getTopLeft(find.byIcon(Icons.circle)).dx, lessThan(title.dx));
 
     // Both variants keep the same vertical rhythm, only the gutter differs.
-    expect(CatSectionHeader.listPadding.top, CatSectionHeader.inlinePadding.top);
+    expect(
+      CatSectionHeader.listPadding.top,
+      CatSectionHeader.inlinePadding.top,
+    );
     expect(CatSectionHeader.inlinePadding.left, 0);
   });
 }

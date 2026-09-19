@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'theme.dart';
 import 'tokens.dart';
 
 /// Tracks mouse hover and hands [builder] a 0..1 fade value that eases over
@@ -74,40 +75,51 @@ class _HoverTileState extends State<HoverTile> {
 
   @override
   Widget build(BuildContext context) {
-    final highlight = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final highlight = CatColors.of(context).hoverSurface;
     // The highlight is driven from HoverFade rather than ListTile's own
     // hoverColor: InkResponse ignores hover when every callback is null, and
     // rows that aren't tappable still need to light up.
     return HoverFade(
       builder: (context, t, hover, _) {
         final revealed = hover || _focused;
-        return ListTile(
-          dense: widget.dense,
-          tileColor: highlight.withValues(alpha: t),
-          // Stock ink hover would stack on top of the color above.
-          hoverColor: Colors.transparent,
-          leading: widget.leading,
-          title: widget.title,
-          subtitle: widget.subtitle,
-          onTap: widget.onTap,
-          trailing: widget.actions.isEmpty
-              ? null
-              : Focus(
-                  // Focus-within tracker only: never a stop itself.
-                  canRequestFocus: false,
-                  skipTraversal: true,
-                  onFocusChange: (f) => setState(() => _focused = f),
-                  child: IgnorePointer(
-                    ignoring: !revealed,
-                    child: Opacity(
-                      opacity: revealed ? 1 : 0,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: widget.actions,
+        // The fill is inset and rounded, so it reads as a tile rather than a
+        // full-bleed wash. The ListTile's own 16 gutter then puts the content
+        // at tileMargin + gutter, where a CatSectionHeader's text also sits.
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppTokens.tileMargin),
+          child: ListTile(
+            dense: widget.dense,
+            tileColor: highlight.withValues(alpha: t),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(AppTokens.tileRadius),
+              ),
+            ),
+            // Stock ink hover would stack on top of the color above.
+            hoverColor: Colors.transparent,
+            leading: widget.leading,
+            title: widget.title,
+            subtitle: widget.subtitle,
+            onTap: widget.onTap,
+            trailing: widget.actions.isEmpty
+                ? null
+                : Focus(
+                    // Focus-within tracker only: never a stop itself.
+                    canRequestFocus: false,
+                    skipTraversal: true,
+                    onFocusChange: (f) => setState(() => _focused = f),
+                    child: IgnorePointer(
+                      ignoring: !revealed,
+                      child: Opacity(
+                        opacity: revealed ? 1 : 0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: widget.actions,
+                        ),
                       ),
                     ),
                   ),
-                ),
+          ),
         );
       },
     );

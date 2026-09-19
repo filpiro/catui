@@ -3,6 +3,35 @@ import 'package:flutter/material.dart';
 
 import 'tokens.dart';
 
+/// House colours Material's [ColorScheme] has no honest slot for.
+class CatColors extends ThemeExtension<CatColors> {
+  /// Fill behind a hovered neutral list row, at full strength; callers fade it
+  /// in with alpha. `overlay0`, not `surface2`: one step off the page
+  /// background disappears.
+  final Color hoverSurface;
+
+  const CatColors({required this.hoverSurface});
+
+  /// Falls back to [ColorScheme.outline] (`overlay0` under [catTheme]) so a
+  /// widget still works under a plain Material theme.
+  static CatColors of(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.extension<CatColors>() ??
+        CatColors(hoverSurface: theme.colorScheme.outline);
+  }
+
+  @override
+  CatColors copyWith({Color? hoverSurface}) =>
+      CatColors(hoverSurface: hoverSurface ?? this.hoverSurface);
+
+  @override
+  CatColors lerp(CatColors? other, double t) => other == null
+      ? this
+      : CatColors(
+          hoverSurface: Color.lerp(hoverSurface, other.hoverSurface, t)!,
+        );
+}
+
 /// Maps a catppuccin [flavor] onto a Material 3 [ThemeData].
 ///
 /// The accent pair is the axis apps differ on; everything else is the house
@@ -43,13 +72,14 @@ ThemeData catTheme(
   );
 
   const globalShape = RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppTokens.radius)),
-        );
+    borderRadius: BorderRadius.all(Radius.circular(AppTokens.radius)),
+  );
 
   final buttonShape = roundedPill == true ? const StadiumBorder() : globalShape;
 
   return ThemeData(
     colorScheme: scheme,
+    extensions: [CatColors(hoverSurface: flavor.overlay0)],
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(iconSize: AppTokens.iconSize),
     ),

@@ -33,8 +33,15 @@ class CatSectionHeader extends StatelessWidget {
   }) : padding = inlinePadding;
 
   /// Generous above (the gap separates it from the previous group), tight
-  /// below (it belongs to what follows).
-  static const listPadding = EdgeInsets.fromLTRB(AppTokens.gutter, 16, AppTokens.gutter, 4);
+  /// below (it belongs to what follows). Sideways it matches a [HoverTile]'s
+  /// content — the tile's inset fill plus the gutter inside it — so the header
+  /// and the rows under it share both edges.
+  static const listPadding = EdgeInsets.fromLTRB(
+    AppTokens.tileMargin + AppTokens.gutter,
+    16,
+    AppTokens.tileMargin + AppTokens.gutter,
+    4,
+  );
   static const inlinePadding = EdgeInsets.fromLTRB(0, 16, 0, 4);
 
   /// Gap between [leading] and the title.
@@ -47,8 +54,13 @@ class CatSectionHeader extends StatelessWidget {
       padding: padding,
       child: Row(
         children: [
-          if (leading != null) ...[leading!, const SizedBox(width: _leadingGap)],
-          Flexible(child: Text(title, style: style, overflow: TextOverflow.ellipsis)),
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: _leadingGap),
+          ],
+          Flexible(
+            child: Text(title, style: style, overflow: TextOverflow.ellipsis),
+          ),
           if (trailing != null) ...[const Spacer(), trailing!],
         ],
       ),
