@@ -24,7 +24,7 @@ void main() {
     await tester.pump();
     expect(opacity(), 1);
 
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    FocusManager.instance.primaryFocus?.unfocus();
     await tester.pump();
     expect(opacity(), 0);
   });
