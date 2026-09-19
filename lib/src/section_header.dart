@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'tokens.dart';
+
 /// The label that opens a group: a list's day or category header, a form's
 /// section label.
 ///
@@ -32,7 +34,7 @@ class CatSectionHeader extends StatelessWidget {
 
   /// Generous above (the gap separates it from the previous group), tight
   /// below (it belongs to what follows).
-  static const listPadding = EdgeInsets.fromLTRB(16, 16, 16, 4);
+  static const listPadding = EdgeInsets.fromLTRB(AppTokens.gutter, 16, AppTokens.gutter, 4);
   static const inlinePadding = EdgeInsets.fromLTRB(0, 16, 0, 4);
 
   /// Gap between [leading] and the title.

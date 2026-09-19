@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 /// The numbers the house style is made of. Every magic value that more than one
 /// widget depends on lives here, so a new screen can match the existing ones
 /// without archaeology.
@@ -45,4 +47,18 @@ abstract final class AppTokens {
   /// Pills sitting next to a 40px icon-button hover disc are forced up to 48 so
   /// they fill the tap box they already occupy instead of reading smaller.
   static const double pillMinHeight = 48;
+
+  /// Horizontal inset shared by toolbars, section headers and list rows so
+  /// their left edges line up.
+  static const double gutter = 16;
+
+  /// Inset around a page that is a form or a document rather than a list.
+  static const double pagePadding = 24;
+
+  /// Toolbar strip above a list: the gutter sideways, a little less above and
+  /// below.
+  static const EdgeInsets toolbarPadding = EdgeInsets.symmetric(
+    horizontal: gutter,
+    vertical: 12,
+  );
 }
