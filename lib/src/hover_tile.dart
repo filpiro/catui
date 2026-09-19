@@ -90,6 +90,12 @@ class _HoverTileState extends State<HoverTile> {
           child: ListTile(
             dense: widget.dense,
             tileColor: highlight.withValues(alpha: t),
+            // Symmetric, against Material 3's 16/24: the trailing actions have
+            // to end where a CatSectionHeader's trailing total ends, and the
+            // header has one gutter on each side.
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppTokens.gutter,
+            ),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(AppTokens.tileRadius),

@@ -33,13 +33,20 @@ colors:
   error: "{catppuccin.red}"
   onError: "{catppuccin.base}"
   outline: "{catppuccin.overlay0}"
+  # House value, not a Material slot: a ThemeExtension (CatColors).
+  hoverSurface: "{catppuccin.overlay0}"
 rounded:
   md: 10px
+  tile: 8px
   dotSm: 6px
   dot: 8px
   dotMd: 12px
   dotLg: 14px
 spacing:
+  gutter: 16px
+  tileMargin: 8px
+  pagePadding: 24px
+  fabClearance: 88px
   formMaxWidth: 560px
   pillMinHeight: 48px
   segmentGap: 4px
@@ -99,9 +106,16 @@ final darkTheme = catTheme(catppuccin.mocha, Brightness.dark);
 
 The source of truth for what each role *means* is the
 [catppuccin style guide](https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md).
-catui maps those roles onto Material 3's `ColorScheme` and adds nothing of its
-own. Surfaces follow the ladder: `base` for the page, `crust`/`mantle` for
-lower containers, `surface0-2` for raised ones, `overlay0` for outlines.
+catui maps those roles onto Material 3's `ColorScheme`. Surfaces follow the
+ladder: `base` for the page, `crust`/`mantle` for lower containers,
+`surface0-2` for raised ones, `overlay0` for outlines.
+
+One colour has no honest Material slot, so it rides a `ThemeExtension`
+(`CatColors.of(context)`): **`hoverSurface`**, the fill behind a hovered
+neutral list row, also `overlay0`. It is `overlay0` and not `surface2` because
+a highlight one step off the page background disappears. Neutral rows only —
+a surface that carries an identity colour (the report board's tiles) hovers in
+its own hue, since a grey wash would mud the identity.
 
 **The accent is the app's, not the package's.** `catTheme` takes `primary` and
 `secondary` as independent optionals, each falling back to the flavor's own
@@ -161,8 +175,19 @@ button. Material's default pill is 40 tall, the same as an `IconButton`'s hover
 disc, but the pill's visual weight reads smaller beside it. Forcing 48 fills the
 tap box the pill already occupies; row height does not change.
 
-Spacing otherwise is stock Material — no scale, no grid. Nothing in the style
-depends on a gap being a particular number, so nothing is tokenised.
+`spacing.gutter` (16) is the horizontal inset a list's rows, its section
+headers and the toolbar above them all share, so their text columns line up.
+`spacing.tileMargin` (8) sits outside it: a hovered row's fill is inset by it,
+which puts the row's content at `tileMargin + gutter` (24) — and
+`CatSectionHeader`'s list padding is that same 24, so a header's trailing total
+and a row's trailing actions end at one right edge.
+
+`spacing.pagePadding` (24) insets a page that is a form or a document rather
+than a list; `spacing.fabClearance` (88) is the bottom padding a scrollable
+needs so its last row stays clickable under a FAB.
+
+Spacing otherwise is stock Material — no scale, no grid. A gap that only one
+widget depends on stays a literal.
 
 ## Shapes
 
@@ -172,6 +197,9 @@ dialog's corner, so a dialog and the buttons inside it read as one surface. Not
 16, which is the FAB's radius: buttons are ~40 tall against the FAB's 56, so 10
 preserves the FAB's corner-to-height proportion. At 16 a 40px button is still a
 pill. The FAB and chips keep their defaults.
+
+`rounded.tile` (8) is the hover fill of a list row, and the one corner that is
+not `rounded.md`: a 56px row at 10 reads as a pill.
 
 The **dot scale** is the other shape decision. A filled `CircleAvatar` in an
 identity colour is the main visual anchor of a list, and its radius carries

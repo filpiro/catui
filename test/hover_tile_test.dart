@@ -58,11 +58,38 @@ void main() {
         borderRadius: BorderRadius.all(Radius.circular(AppTokens.tileRadius)),
       ),
     );
-    // Inset from the page edges by tileMargin, content a gutter inside that.
+    // Inset from both page edges by tileMargin, content a gutter inside that,
+    // which is where a CatSectionHeader's own text sits on both sides.
+    final page = tester.getSize(find.byType(Scaffold)).width;
     expect(tester.getTopLeft(find.byType(ListTile)).dx, AppTokens.tileMargin);
     expect(
+      tester.getTopRight(find.byType(ListTile)).dx,
+      page - AppTokens.tileMargin,
+    );
+    expect(
       tester.getTopLeft(find.text('row')).dx,
-      AppTokens.tileMargin + AppTokens.gutter,
+      CatSectionHeader.listPadding.left,
+    );
+  });
+
+  testWidgets('a header and a row end at the same right edge', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: catTheme(catppuccin.mocha, Brightness.dark),
+        home: const Scaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CatSectionHeader(title: 'day', trailing: Text('8:00')),
+              HoverTile(title: Text('row'), actions: [Text('act')]),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(
+      tester.getTopRight(find.text('8:00')).dx,
+      tester.getTopRight(find.text('act')).dx,
     );
   });
 }

@@ -58,10 +58,13 @@ class CatSectionHeader extends StatelessWidget {
             leading!,
             const SizedBox(width: _leadingGap),
           ],
-          Flexible(
+          // Expanded, not Flexible + Spacer: a Spacer is itself flex 1, so it
+          // splits the free space with the title and the trailing value stops
+          // halfway across the row instead of at the right edge.
+          Expanded(
             child: Text(title, style: style, overflow: TextOverflow.ellipsis),
           ),
-          if (trailing != null) ...[const Spacer(), trailing!],
+          if (trailing != null) trailing!,
         ],
       ),
     );
