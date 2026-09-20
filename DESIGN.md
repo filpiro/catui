@@ -296,6 +296,10 @@ The section owns every gap — around itself, under the title, between two
 options — because the mess it replaces was each block on the page inventing its
 own spacing. A page built on it restates no padding and no text style.
 
+Both gaps are tokens, one step apart: `spacing.gutter` (16) under the title and
+between two options, `spacing.pagePadding` (24) above and below the section. Two
+sections therefore read further apart than two options inside one.
+
 `CatSettingRow` is one option inside that body: label and optional description
 left, the control right, edge to edge. It replaces a `SwitchListTile` with
 zeroed padding, whose own paddings and text styles fought the section's rhythm.

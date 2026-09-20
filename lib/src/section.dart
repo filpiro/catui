@@ -27,11 +27,13 @@ class CatSection extends StatelessWidget {
     this.divider = true,
   });
 
-  /// Air above the title, then the body, then air before the border.
-  static const _padding = EdgeInsets.symmetric(vertical: AppTokens.gutter);
+  /// Air above the title, then the body, then air before the border. One step
+  /// up from [_gap], so two sections read further apart than two options
+  /// inside one.
+  static const _padding = EdgeInsets.symmetric(vertical: AppTokens.pagePadding);
 
   /// Gap under the title block, and between two options.
-  static const _gap = 12.0;
+  static const _gap = AppTokens.gutter;
 
   @override
   Widget build(BuildContext context) {
