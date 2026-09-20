@@ -32,6 +32,21 @@ class CatColors extends ThemeExtension<CatColors> {
         );
 }
 
+/// The skin anything that lifts off the page wears: a dialog, a toast card.
+/// One step off the page background (`mantle`), a hairline [ColorScheme.outlineVariant]
+/// edge, the house corner — and no Material elevation tint, which is what makes
+/// a stock dialog read as a different colour on every surface it opens over.
+///
+/// A [ShapeDecoration] because a card can hand it straight to a [Container]
+/// while [catTheme] reads its `color` and `shape` for the dialog theme.
+ShapeDecoration catSurfaceDecoration(ColorScheme scheme) => ShapeDecoration(
+  color: scheme.surfaceContainerLow,
+  shape: RoundedRectangleBorder(
+    side: BorderSide(color: scheme.outlineVariant),
+    borderRadius: BorderRadius.circular(AppTokens.radius),
+  ),
+);
+
 /// Maps a catppuccin [flavor] onto a Material 3 [ThemeData].
 ///
 /// The accent pair is the axis apps differ on; everything else is the house
@@ -76,6 +91,7 @@ ThemeData catTheme(
   );
 
   final buttonShape = roundedPill == true ? const StadiumBorder() : globalShape;
+  final surface = catSurfaceDecoration(scheme);
 
   return ThemeData(
     colorScheme: scheme,
@@ -98,8 +114,13 @@ ThemeData catTheme(
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: SegmentedButton.styleFrom(shape: buttonShape),
     ),
-    // Same corner as the buttons it contains, so a dialog reads as one surface.
-    dialogTheme: const DialogThemeData(shape: globalShape),
+    // The shared surface recipe, so a dialog and a toast are the same object.
+    // The tint is off: the border does the lifting, not an elevation wash.
+    dialogTheme: DialogThemeData(
+      backgroundColor: surface.color,
+      surfaceTintColor: Colors.transparent,
+      shape: surface.shape,
+    ),
     // Outlined everywhere, set once: a field in a dialog and a field on a page
     // are the same control, so no screen states its own border.
     inputDecorationTheme: const InputDecorationThemeData(

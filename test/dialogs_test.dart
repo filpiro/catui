@@ -5,11 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 /// Pumps a page whose only button opens [open].
 Future<void> pumpOpener(
   WidgetTester tester,
-  Future<void> Function(BuildContext) open,
-) async {
+  Future<void> Function(BuildContext) open, {
+  ThemeData? theme,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
-      theme: catTheme(catppuccin.mocha, Brightness.dark),
+      theme: theme ?? catTheme(catppuccin.mocha, Brightness.dark),
       home: Scaffold(
         body: Builder(
           builder: (context) => TextButton(
@@ -100,6 +101,52 @@ void main() {
     await tester.pumpAndSettle();
     expect(name, 'new');
   });
+
+  for (final (name, flavor, brightness) in [
+    ('light', catppuccin.latte, Brightness.light),
+    ('dark', catppuccin.mocha, Brightness.dark),
+  ]) {
+    testWidgets('both dialogs wear the shared surface in $name', (
+      tester,
+    ) async {
+      final theme = catTheme(flavor, brightness);
+
+      for (final open in [
+        (BuildContext c) =>
+            catConfirm(c, title: 't', confirm: 'ok', cancel: 'no'),
+        (BuildContext c) => catTextInput(
+          c,
+          title: 't',
+          label: 'l',
+          confirm: 'ok',
+          cancel: 'no',
+        ),
+      ]) {
+        await pumpOpener(tester, (c) async => open(c), theme: theme);
+
+        final material = tester.widget<Material>(
+          find
+              .descendant(
+                of: find.byType(AlertDialog),
+                matching: find.byType(Material),
+              )
+              .first,
+        );
+        expect(material.color, flavor.mantle);
+        expect(
+          material.shape,
+          RoundedRectangleBorder(
+            side: BorderSide(color: flavor.surface1),
+            borderRadius: BorderRadius.circular(AppTokens.radius),
+          ),
+        );
+
+        // The route outlives a re-pump, so the next dialog would open behind it.
+        await tester.tap(find.text('no'));
+        await tester.pumpAndSettle();
+      }
+    });
+  }
 
   testWidgets('a new snack replaces the current one', (tester) async {
     final key = GlobalKey<ScaffoldMessengerState>();
