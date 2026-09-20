@@ -15,11 +15,16 @@ class CatSection extends StatelessWidget {
   /// The interactive options, spaced apart so two of them don't run together.
   final List<Widget> children;
 
+  /// The closing border. Off on a page's last section: a hairline with nothing
+  /// under it separates the page from the window.
+  final bool divider;
+
   const CatSection({
     super.key,
     required this.title,
     this.description,
     required this.children,
+    this.divider = true,
   });
 
   /// Air above the title, then the body, then air before the border.
@@ -34,9 +39,11 @@ class CatSection extends StatelessWidget {
     return Container(
       padding: _padding,
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: theme.colorScheme.outlineVariant),
-        ),
+        border: divider
+            ? Border(
+                bottom: BorderSide(color: theme.colorScheme.outlineVariant),
+              )
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

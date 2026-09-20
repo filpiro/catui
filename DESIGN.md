@@ -313,6 +313,9 @@ CatSection(
 )
 ```
 
+The last section on a page passes `divider: false`: a hairline with nothing
+under it separates the page from the window rather than one block from the next.
+
 The section stretches to the page; the control inside it does not. A row keeps
 the trailing widget at its intrinsic width, so a switch or a `CatSegmented`
 stays its own size however wide the window gets.

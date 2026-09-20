@@ -47,6 +47,32 @@ void main() {
     expect(border.bottom.color, theme.colorScheme.outlineVariant);
   });
 
+  testWidgets('the last section closes without a hairline', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: CatSection(
+            title: 'Ultima',
+            divider: false,
+            children: [Text('Opzione')],
+          ),
+        ),
+      ),
+    );
+
+    final decoration =
+        tester
+                .widget<Container>(
+                  find.descendant(
+                    of: find.byType(CatSection),
+                    matching: find.byType(Container),
+                  ),
+                )
+                .decoration!
+            as BoxDecoration;
+    expect(decoration.border, isNull);
+  });
+
   testWidgets('a setting row puts the control at the far edge', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
