@@ -322,8 +322,11 @@ CatSection(
 )
 ```
 
-The last section on a page passes `divider: false`: a hairline with nothing
-under it separates the page from the window rather than one block from the next.
+The edges of the list are the page's, not a section's: the last section passes
+`divider: false` (a hairline with nothing under it separates the page from the
+window, not one block from the next) and the first passes `spaceAbove: false`
+(the page's own padding is the only gap wanted above the first title, as on
+every other page).
 
 The section stretches to the page; the control inside it does not. A row keeps
 the trailing widget at its intrinsic width, so a switch or a `CatSegmented`

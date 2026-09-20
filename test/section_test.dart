@@ -47,6 +47,24 @@ void main() {
     expect(border.bottom.color, theme.colorScheme.outlineVariant);
   });
 
+  testWidgets('the first section starts on the page padding alone', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: CatSection(
+            title: 'Prima',
+            spaceAbove: false,
+            children: [Text('Opzione')],
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.getTopLeft(find.text('Prima')).dy, 0);
+  });
+
   testWidgets('the last section closes without a hairline', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

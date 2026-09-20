@@ -19,17 +19,23 @@ class CatSection extends StatelessWidget {
   /// under it separates the page from the window.
   final bool divider;
 
+  /// The air above the title, which separates this section from the one before
+  /// it. Off on a page's first section: there the page's own padding is the
+  /// only gap wanted, as on every other page.
+  final bool spaceAbove;
+
   const CatSection({
     super.key,
     required this.title,
     this.description,
     required this.children,
     this.divider = true,
+    this.spaceAbove = true,
   });
 
   /// Air above the title, then the body, then air before the border. Well past
   /// [_gap], so two sections read further apart than two options inside one.
-  static const _padding = EdgeInsets.symmetric(vertical: AppTokens.sectionGap);
+  static const _space = AppTokens.sectionGap;
 
   /// Gap under the title block, and between two options.
   static const _gap = AppTokens.gutter;
@@ -38,7 +44,10 @@ class CatSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: _padding,
+      padding: EdgeInsets.only(
+        top: spaceAbove ? _space : 0,
+        bottom: _space,
+      ),
       decoration: BoxDecoration(
         border: divider
             ? Border(
