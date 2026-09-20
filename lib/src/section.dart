@@ -23,16 +23,16 @@ class CatSection extends StatelessWidget {
   });
 
   /// Air above the title, then the body, then air before the border.
-  static const padding = EdgeInsets.symmetric(vertical: AppTokens.gutter);
+  static const _padding = EdgeInsets.symmetric(vertical: AppTokens.gutter);
 
   /// Gap under the title block, and between two options.
-  static const gap = 12.0;
+  static const _gap = 12.0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: padding,
+      padding: _padding,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: theme.colorScheme.outlineVariant),
@@ -40,21 +40,12 @@ class CatSection extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: gap,
+        spacing: _gap,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 4,
-            children: [
-              Text(title, style: theme.textTheme.titleMedium),
-              if (description != null)
-                Text(
-                  description!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-            ],
+          _Label(
+            title: title,
+            description: description,
+            style: theme.textTheme.titleMedium,
           ),
           ...children,
         ],
@@ -84,28 +75,47 @@ class CatSettingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       spacing: AppTokens.gutter,
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 2,
-            children: [
-              Text(title, style: theme.textTheme.bodyLarge),
-              if (description != null)
-                Text(
-                  description!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-            ],
+          child: _Label(
+            title: title,
+            description: description,
+            style: theme.textTheme.bodyLarge,
           ),
         ),
         // The control keeps its intrinsic width: a stretched switch or picker
         // is the bug, not the fix.
         trailing,
+      ],
+    );
+  }
+}
+
+/// A title with an optional description under it, muted and one step smaller.
+/// The two widgets above differ only in the title's weight.
+class _Label extends StatelessWidget {
+  final String title;
+  final String? description;
+  final TextStyle? style;
+
+  const _Label({required this.title, this.description, this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 2,
+      children: [
+        Text(title, style: style),
+        if (description != null)
+          Text(
+            description!,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
       ],
     );
   }

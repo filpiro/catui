@@ -98,6 +98,23 @@ class _Gallery extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
+          const _Section('Settings section (title, description, options)'),
+          CatSection(
+            title: 'AI',
+            description: 'Gira su questo computer.',
+            children: [
+              CatSettingRow(
+                title: 'Riassunto delle note',
+                description: 'Usa un modello locale.',
+                trailing: Switch(value: true, onChanged: (_) {}),
+              ),
+              const CatSettingRow(
+                title: 'Disattivato',
+                trailing: Switch(value: false, onChanged: null),
+              ),
+              OutlinedButton(onPressed: () {}, child: const Text('Elimina')),
+            ],
+          ),
           const _Section('Select'),
           const Align(alignment: Alignment.centerLeft, child: _SelectDemo()),
           const _Section('Dialog (AppTokens.radius)'),

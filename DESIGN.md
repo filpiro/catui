@@ -77,6 +77,13 @@ components:
   dialog:
     backgroundColor: "{colors.surfaceContainerHigh}"
     rounded: "{rounded.md}"
+  catSection:
+    borderBottomColor: "{colors.outlineVariant}"
+    titleStyle: titleMedium
+    descriptionColor: "{colors.onSurfaceVariant}"
+  catSettingRow:
+    titleStyle: bodyLarge
+    descriptionColor: "{colors.onSurfaceVariant}"
 ---
 
 ## Overview
@@ -278,6 +285,40 @@ are absent because nothing has needed them; add them when something does.
 
 Stock `SegmentedButton` still gets `rounded.md` from the theme — use it when the
 joined bar is what you want.
+
+### `CatSection` / `CatSettingRow`
+
+A settings-style page is a list of `CatSection`s: a `titleMedium` title, an
+optional muted one-line description, the options, and a hairline
+`colors.outlineVariant` bottom border that closes the block.
+
+The section owns every gap — around itself, under the title, between two
+options — because the mess it replaces was each block on the page inventing its
+own spacing. A page built on it restates no padding and no text style.
+
+`CatSettingRow` is one option inside that body: label and optional description
+left, the control right, edge to edge. It replaces a `SwitchListTile` with
+zeroed padding, whose own paddings and text styles fought the section's rhythm.
+
+```dart
+CatSection(
+  title: 'AI',
+  children: [
+    CatSettingRow(
+      title: 'Riassunto delle note',
+      description: 'Usa un modello locale su questo computer.',
+      trailing: Switch(value: on, onChanged: onChanged),
+    ),
+  ],
+)
+```
+
+The section stretches to the page; the control inside it does not. A row keeps
+the trailing widget at its intrinsic width, so a switch or a `CatSegmented`
+stays its own size however wide the window gets.
+
+`CatSectionHeader` stays what it was — the lighter label that opens a group
+inside a *list*. Use it there, `CatSection` on a settings-style page.
 
 ## Do's and Don'ts
 

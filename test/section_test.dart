@@ -35,7 +35,12 @@ void main() {
 
     final border =
         (tester
-                    .widget<Container>(find.byType(Container))
+                    .widget<Container>(
+                      find.descendant(
+                        of: find.byType(CatSection),
+                        matching: find.byType(Container),
+                      ),
+                    )
                     .decoration!
                 as BoxDecoration)
             .border!;
