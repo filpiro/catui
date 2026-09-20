@@ -46,6 +46,7 @@ spacing:
   gutter: 16px
   tileMargin: 8px
   pagePadding: 24px
+  sectionGap: 48px
   fabClearance: 88px
   formMaxWidth: 560px
   pillMinHeight: 48px
@@ -296,9 +297,13 @@ The section owns every gap — around itself, under the title, between two
 options — because the mess it replaces was each block on the page inventing its
 own spacing. A page built on it restates no padding and no text style.
 
-Both gaps are tokens, one step apart: `spacing.gutter` (16) under the title and
-between two options, `spacing.pagePadding` (24) above and below the section. Two
-sections therefore read further apart than two options inside one.
+Both gaps are tokens, well apart: `spacing.gutter` (16) under the title and
+between two options, `spacing.sectionGap` (48) above and below the section. The
+eye therefore groups the options first and the sections second.
+
+A section's title and description keep `spacing.formMaxWidth` — the same cap a
+document page wears — while the section itself stretches. Prose that runs the
+width of a 1600px window is unreadable wherever it sits.
 
 `CatSettingRow` is one option inside that body: label and optional description
 left, the control right, edge to edge. It replaces a `SwitchListTile` with

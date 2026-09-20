@@ -55,6 +55,11 @@ abstract final class AppTokens {
   /// Inset around a page that is a form or a document rather than a list.
   static const double pagePadding = 24;
 
+  /// Air above and below a [CatSection]. Well past [gutter], the gap between
+  /// two options inside one section, so the eye groups the options first and
+  /// the sections second.
+  static const double sectionGap = 48;
+
   /// Horizontal inset of a list row's hover fill, so the highlight reads as a
   /// tile rather than a full-bleed wash. A row's text therefore starts at
   /// [tileMargin] + [gutter], and a section header matches it.

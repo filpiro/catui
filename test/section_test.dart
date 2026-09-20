@@ -73,6 +73,55 @@ void main() {
     expect(decoration.border, isNull);
   });
 
+  testWidgets('prose keeps the document cap however wide the section is', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 1400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CatSection(
+                  title: 'Conservazione',
+                  description: 'Una descrizione abbastanza lunga da '
+                      'superare la larghezza massima di una colonna di testo '
+                      'quando la finestra è larga.',
+                  children: [
+                    CatSettingRow(
+                      title: 'Riassunto',
+                      description: 'Un modello locale su questo computer, '
+                          'con una descrizione altrettanto lunga da mandare '
+                          'a capo.',
+                      trailing: Switch(value: true, onChanged: (_) {}),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    for (final text in [
+      find.textContaining('superare la larghezza'),
+      find.textContaining('altrettanto lunga'),
+    ]) {
+      expect(
+        tester.getSize(text).width,
+        lessThanOrEqualTo(AppTokens.formMaxWidth),
+      );
+    }
+    // The control still sits at the far edge, not next to the capped text.
+    expect(tester.getTopRight(find.byType(Switch)).dx, closeTo(1400, 1));
+  });
+
   testWidgets('a setting row puts the control at the far edge', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

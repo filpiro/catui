@@ -27,10 +27,9 @@ class CatSection extends StatelessWidget {
     this.divider = true,
   });
 
-  /// Air above the title, then the body, then air before the border. One step
-  /// up from [_gap], so two sections read further apart than two options
-  /// inside one.
-  static const _padding = EdgeInsets.symmetric(vertical: AppTokens.pagePadding);
+  /// Air above the title, then the body, then air before the border. Well past
+  /// [_gap], so two sections read further apart than two options inside one.
+  static const _padding = EdgeInsets.symmetric(vertical: AppTokens.sectionGap);
 
   /// Gap under the title block, and between two options.
   static const _gap = AppTokens.gutter;
@@ -86,11 +85,16 @@ class CatSettingRow extends StatelessWidget {
     return Row(
       spacing: AppTokens.gutter,
       children: [
+        // Align, not a bare Expanded: Expanded hands its child tight
+        // constraints, which would swallow the label's own width cap.
         Expanded(
-          child: _Label(
-            title: title,
-            description: description,
-            style: theme.textTheme.bodyLarge,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: _Label(
+              title: title,
+              description: description,
+              style: theme.textTheme.bodyLarge,
+            ),
           ),
         ),
         // The control keeps its intrinsic width: a stretched switch or picker
@@ -113,19 +117,24 @@ class _Label extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 2,
-      children: [
-        Text(title, style: style),
-        if (description != null)
-          Text(
-            description!,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+    return ConstrainedBox(
+      // The section stretches to the window; its prose does not. Same cap a
+      // document page wears, so a description stays as readable here.
+      constraints: const BoxConstraints(maxWidth: AppTokens.formMaxWidth),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 2,
+        children: [
+          Text(title, style: style),
+          if (description != null)
+            Text(
+              description!,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
