@@ -13,6 +13,7 @@ export 'src/dialogs.dart';
 export 'src/hover_tile.dart';
 export 'src/page.dart';
 export 'src/row_actions.dart';
+export 'src/section.dart';
 export 'src/section_header.dart';
 export 'src/segmented.dart';
 export 'src/tag.dart';
